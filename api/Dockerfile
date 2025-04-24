@@ -1,9 +1,8 @@
-
 FROM openjdk:17-jdk-slim
 
 WORKDIR /app
 
-COPY C:\spring-boot-gvsbooks\target\api-0.0.1-SNAPSHOT.jar
+COPY target/api-0.0.1-SNAPSHOT.jar
 
 EXPOSE 8080
 
