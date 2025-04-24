@@ -25,4 +25,3 @@ COPY --from=build /app/target/api-0.0.1-SNAPSHOT.jar app.jar
 
 # Run the application
 ENTRYPOINT ["java", "-jar", "app.jar"]
-p.jar" ]
