@@ -1,17 +1,28 @@
-FROM windows:latest AS build
+# Build Stage (Windows container base)
+FROM mcr.microsoft.com/windows/servercore:ltsc2022 AS build
 
-RUN apt-get update
-RUN apt-get install
+WORKDIR /app
 
+# Install dependencies (Windows uses PowerShell or choco for packages)
+RUN powershell -Command "Install-WindowsFeature -Name Web-Server"
+
+# Copy project files
 COPY . .
 
-RUN apt-get install maven -y
-RUN mvn clean install
+# Build application
+RUN mvn clean install -DskipTests
 
-FROM openjdk-17-jdk-slim
+# Runtime Stage (Windows container base)
+FROM mcr.microsoft.com/windows/servercore:ltsc2022
 
+WORKDIR /app
+
+# Expose the port
 EXPOSE 8080
 
-COPY --from=build /target/api-0.0.1-SNAPSHOT.jar app.jar
+# Copy the JAR file from the build stage
+COPY --from=build /app/target/api-0.0.1-SNAPSHOT.jar app.jar
 
-ENTRYPOINT [ "java","-jar","app.jar" ]
+# Run the application
+ENTRYPOINT ["java", "-jar", "app.jar"]
+p.jar" ]
