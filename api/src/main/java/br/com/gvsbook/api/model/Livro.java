@@ -3,11 +3,16 @@ package br.com.gvsbook.api.model;
 import br.com.gvsbook.api.dto.AtualizaLivroDTO;
 import br.com.gvsbook.api.dto.LivroDTO;
 import br.com.gvsbook.api.enums.CategoriaLivro;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @EqualsAndHashCode(of = "id")
 @NoArgsConstructor
@@ -30,8 +35,11 @@ public class Livro {
   private Double preco;
   private String enderecoImagem;
 
-  public Livro(LivroDTO livro) {
+  @ManyToMany(mappedBy = "livrosSalvos")
+  @JsonIgnore
+  private List<Usuario> usuarios = new ArrayList<>();
 
+  public Livro(LivroDTO livro) {
 
     this.titulo = livro.titulo();
     this.descricao = livro.descricao();
@@ -42,7 +50,7 @@ public class Livro {
   }
 
 
-  public void atualizaInformacoes(AtualizaLivroDTO livro) {
+  public void atualizaInformacoes(@Valid AtualizaLivroDTO livro) {
     if (livro.descricao() != null){
       this.descricao = livro.descricao();
     }
